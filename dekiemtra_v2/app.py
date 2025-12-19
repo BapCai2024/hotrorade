@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
 """
 app.py — V2 (cải tiến) | Giữ cấu trúc 3 tab
-Tab 1: Tạo đề từ ma trận (upload file, AI sinh đề)
-Tab 2: Soạn từng câu (GV chọn Chủ đề/Bài/YCCĐ/Dạng/Mức/Điểm)
-Tab 3: Ma trận & xuất (xem danh sách câu, chỉnh sửa, xuất Word)
+
+Sửa lỗi ModuleNotFoundError trên Streamlit Cloud:
+- Streamlit đôi khi không tự thêm thư mục chứa app.py (ví dụ: dekiemtra_v2/) vào sys.path
+- Nên import 'modules.*' bị lỗi dù modules/ nằm cạnh app.py
+
+Fix: chèn thư mục hiện tại vào sys.path trước khi import modules.
 """
 from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+# ✅ FIX IMPORT PATH (quan trọng cho Streamlit Cloud)
+APP_DIR = Path(__file__).resolve().parent
+if str(APP_DIR) not in sys.path:
+    sys.path.insert(0, str(APP_DIR))
 
 import streamlit as st
 
@@ -31,8 +42,8 @@ def _init_state():
     st.session_state.setdefault("current_preview", "")  # Tab2: preview câu
     st.session_state.setdefault("temp_question_data", None)
     st.session_state.setdefault("yccd_cache", {})       # cache gợi ý YCCĐ (theo bài)
-    st.session_state.setdefault("curriculum", None)     # dữ liệu chương trình (nested dict hoặc df)
-    st.session_state.setdefault("curriculum_df", None)  # bảng dữ liệu chuẩn hoá
+    st.session_state.setdefault("curriculum", None)     # nested dict
+    st.session_state.setdefault("curriculum_df", None)  # dataframe chuẩn hoá
     st.session_state.setdefault("school_name", DEFAULT_SCHOOL)
 
 
